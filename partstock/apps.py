@@ -4,3 +4,6 @@ from django.apps import AppConfig
 class PartstockConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'partstock'
+
+    def ready(self):
+        import partstock.signals
