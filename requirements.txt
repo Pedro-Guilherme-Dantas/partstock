@@ -1,0 +1,12 @@
+django>=4.0
+djangorestframework
+gunicorn
+pandas
+redis
+celery[redis]
+django-celery-beat
+psycopg2-binary
+flower
+flake8
+mypy
+python-decouple
