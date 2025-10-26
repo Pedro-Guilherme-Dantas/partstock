@@ -1,7 +1,6 @@
-from django.db.models.signals import post_save, post_delete, pre_save
+from django.db.models.signals import post_save, post_delete
 from django.dispatch import receiver
 from .models import MovementItem
-
 
 @receiver(post_save, sender=MovementItem)
 def update_stock_on_save(sender, instance, created, **kwargs):
