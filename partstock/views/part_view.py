@@ -3,7 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from partstock.services.part_service import PartService
 from partstock.models import Part
-from partstock.serializers import PartSerializer
+from partstock.serializers import PartSerializer, PartUpdateSerializer
 
 
 class ListAndCreatePart(APIView):
@@ -44,7 +44,7 @@ class PartDetail(APIView):
 
     def patch(self, request, pk, format=None):
         try:
-            serializer = PartSerializer(data=request.data, partial=True)
+            serializer = PartUpdateSerializer(data=request.data, partial=True)
             if serializer.is_valid(raise_exception=True):
                 updated_part = PartService.update_part(
                     part_id=pk,
