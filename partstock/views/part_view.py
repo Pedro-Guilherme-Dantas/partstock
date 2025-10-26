@@ -1,9 +1,9 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .services.part_service import PartService
-from .models import Part
-from .serializers import PartSerializer
+from partstock.services.part_service import PartService
+from partstock.models import Part
+from partstock.serializers import PartSerializer
 
 
 class ListAndCreatePart(APIView):
