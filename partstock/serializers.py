@@ -33,7 +33,7 @@ class PartUpdateSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'current_stock', 'created_at', 'updated_at']
 
 
-class StockMovimentSerializer(serializers.ModelSerializer):
+class StockMovementSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockMovement
         fields = [
@@ -45,15 +45,14 @@ class StockMovimentSerializer(serializers.ModelSerializer):
         read_only_fields = ['id', 'date_recorded']
 
 
-class StockMovimentUpdateSerializer(serializers.ModelSerializer):
+class StockMovementUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = StockMovement
         fields = [
             'id',
-            'movement_type',
             'notes',
         ]
-        read_only_fields = ['id', 'date_recorded']
+        read_only_fields = ['id', 'date_recorded', 'movement_type']
 
 
 class MovementItemSerializer(serializers.ModelSerializer):
