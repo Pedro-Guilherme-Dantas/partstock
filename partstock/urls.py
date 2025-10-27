@@ -40,7 +40,7 @@ urlpatterns = [
     path(
         'movement_items/',
         movement_item_view.ListAndCreateMovementItem.as_view(),
-        name='list_and_create_movement_stock'
+        name='list_and_create_movement_item'
         ),
     path(
         'movement_items/<int:pk>/',
