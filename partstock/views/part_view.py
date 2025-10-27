@@ -4,9 +4,13 @@ from rest_framework import status
 from partstock.services.part_service import PartService
 from partstock.models import Part
 from partstock.serializers import PartSerializer, PartUpdateSerializer
+from partstock.permissions import IsAdminUserOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListAndCreatePart(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
+
     def get(self, request, format=None):
         queryset = PartService.get_all_parts() 
 
@@ -33,7 +37,7 @@ class ListAndCreatePart(APIView):
 class PartDetail(APIView):
     def get(self, request, pk, format=None):
         try:
-            part = PartService.get_part_by_id(pk)
+            part = PartService.get_by_id(pk)
             serializer = PartSerializer(part)
             return Response(serializer.data, status=status.HTTP_200_OK)
         except Part.DoesNotExist as e:

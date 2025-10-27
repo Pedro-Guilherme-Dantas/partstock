@@ -6,9 +6,13 @@ from partstock.models import StockMovement
 from partstock.serializers import (
     StockMovementSerializer, StockMovementUpdateSerializer
 )
+from partstock.permissions import IsAdminUserOrReadOnly
+from rest_framework.permissions import IsAuthenticated
 
 
 class ListAndCreateStockMovement(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
+
     def get(self, request, format=None):
         queryset = StockMovementService.get_all_movements() 
 
