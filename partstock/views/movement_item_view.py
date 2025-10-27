@@ -19,41 +19,24 @@ class ListAndCreateMovementItem(APIView):
 
     def post(self, request, format=None):
         serializer = MovementItemSerializer(data=request.data)
-        try:
-            if serializer.is_valid(raise_exception=True):
-                new_movement = MovementItemService.create_new_movement(
-                    validated_data=serializer.validated_data
-                )
-                response_serializer = MovementItemSerializer(new_movement) 
-
-                return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-        except ValueError as e:
-            return Response(
-                {'detail': str(e)}, 
-                status=status.HTTP_400_BAD_REQUEST
+        if serializer.is_valid(raise_exception=True):
+            new_movement = MovementItemService.create_new_movement(
+                validated_data=serializer.validated_data
             )
+            response_serializer = MovementItemSerializer(new_movement) 
+
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class MovementItemDetail(APIView):
     permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
 
     def get(self, request, pk, format=None):
-        try:
-            movement = MovementItemService.get_by_id(pk)
-            serializer = MovementItemSerializer(movement)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except StockMovement.DoesNotExist as e:
-            return Response(
-                {'detail': str(e)}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        movement = MovementItemService.get_by_id(pk)
+        serializer = MovementItemSerializer(movement)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
-        try:
-            MovementItemService.delete_movement(pk=pk)
-            return Response(status=status.HTTP_204_NO_CONTENT) 
-        except ValueError as e:
-            return Response(
-                {"detail": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        MovementItemService.delete_movement(pk=pk)
+        return Response(status=status.HTTP_204_NO_CONTENT) 
+

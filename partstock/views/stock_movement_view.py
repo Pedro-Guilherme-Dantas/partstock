@@ -21,63 +21,34 @@ class ListAndCreateStockMovement(APIView):
 
     def post(self, request, format=None):
         serializer = StockMovementSerializer(data=request.data)
-        try:
-            if serializer.is_valid(raise_exception=True):
-                new_movement = StockMovementService.create_new_movement(
-                    validated_data=serializer.validated_data
-                )
-                response_serializer = StockMovementSerializer(new_movement) 
-
-                return Response(response_serializer.data, status=status.HTTP_201_CREATED)
-        except ValueError as e:
-            return Response(
-                {'detail': str(e)}, 
-                status=status.HTTP_400_BAD_REQUEST
+        if serializer.is_valid(raise_exception=True):
+            new_movement = StockMovementService.create_new_movement(
+                validated_data=serializer.validated_data
             )
+            response_serializer = StockMovementSerializer(new_movement) 
+
+            return Response(response_serializer.data, status=status.HTTP_201_CREATED)
 
 
 class StockMovementDetail(APIView):
     def get(self, request, pk, format=None):
-        try:
-            movement = StockMovementService.get_by_id(pk)
-            serializer = StockMovementSerializer(movement)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except StockMovement.DoesNotExist as e:
-            return Response(
-                {'detail': str(e)}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        movement = StockMovementService.get_by_id(pk)
+        serializer = StockMovementSerializer(movement)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
-        try:
-            serializer = StockMovementUpdateSerializer(
-                data=request.data, partial=True
-                )
-            if serializer.is_valid(raise_exception=True):
-                updated_movement = StockMovementService.update_movement(
-                    pk=pk,
-                    validated_data=serializer.validated_data
-                )
-                response_serializer = StockMovementSerializer(updated_movement)
+        serializer = StockMovementUpdateSerializer(
+            data=request.data, partial=True
+            )
+        if serializer.is_valid(raise_exception=True):
+            updated_movement = StockMovementService.update_movement(
+                pk=pk,
+                validated_data=serializer.validated_data
+            )
+            response_serializer = StockMovementSerializer(updated_movement)
 
-                return Response(response_serializer.data, status=status.HTTP_200_OK)
-        except StockMovement.DoesNotExist as e:
-            return Response(
-                {'detail': str(e)},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except ValueError as e:
-            return Response(
-                {'detail': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
-        try:
-            StockMovementService.delete_movement(pk=pk)
-            return Response(status=status.HTTP_204_NO_CONTENT) 
-        except ValueError as e:
-            return Response(
-                {"detail": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        StockMovementService.delete_movement(pk=pk)
+        return Response(status=status.HTTP_204_NO_CONTENT) 

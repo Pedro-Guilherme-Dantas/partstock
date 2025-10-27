@@ -36,44 +36,21 @@ class ListAndCreatePart(APIView):
 
 class PartDetail(APIView):
     def get(self, request, pk, format=None):
-        try:
-            part = PartService.get_by_id(pk)
-            serializer = PartSerializer(part)
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        except Part.DoesNotExist as e:
-            return Response(
-                {'detail': str(e)}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        part = PartService.get_by_id(pk)
+        serializer = PartSerializer(part)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
     def patch(self, request, pk, format=None):
-        try:
-            serializer = PartUpdateSerializer(data=request.data, partial=True)
-            if serializer.is_valid(raise_exception=True):
-                updated_part = PartService.update_part(
-                    part_id=pk,
-                    validated_data=serializer.validated_data
-                )
-                response_serializer = PartSerializer(updated_part)
+        serializer = PartUpdateSerializer(data=request.data, partial=True)
+        if serializer.is_valid(raise_exception=True):
+            updated_part = PartService.update_part(
+                part_id=pk,
+                validated_data=serializer.validated_data
+            )
+            response_serializer = PartSerializer(updated_part)
 
-                return Response(response_serializer.data, status=status.HTTP_200_OK)
-        except Part.DoesNotExist as e:
-            return Response(
-                {'detail': str(e)},
-                status=status.HTTP_404_NOT_FOUND
-            )
-        except ValueError as e:
-            return Response(
-                {'detail': str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+            return Response(response_serializer.data, status=status.HTTP_200_OK)
 
     def delete(self, request, pk, format=None):
-        try:
-            PartService.delete_part(part_id=pk)
-            return Response(status=status.HTTP_204_NO_CONTENT) 
-        except ValueError as e:
-            return Response(
-                {"detail": str(e)},
-                status=status.HTTP_400_BAD_REQUEST
-            )
+        PartService.delete_part(part_id=pk)
+        return Response(status=status.HTTP_204_NO_CONTENT) 
