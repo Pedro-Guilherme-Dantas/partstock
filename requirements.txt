@@ -1,0 +1,16 @@
+django>=4.0
+djangorestframework
+djangorestframework-simplejwt
+gunicorn
+pandas
+redis
+celery[redis]
+django-celery-beat
+psycopg2-binary
+flower
+flake8
+mypy
+python-decouple
+pytest
+pytest-django
+factory-boy
