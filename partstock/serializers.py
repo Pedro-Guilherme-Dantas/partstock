@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import MovementItem, Part, StockMovement
+from .models import MovementItem, Part, StockMovement, UploadTask
 
 
 class PartSerializer(serializers.ModelSerializer):
@@ -67,3 +67,19 @@ class MovementItemSerializer(serializers.ModelSerializer):
             'unit_cost_at_transaction'
         ]
         read_only_fields = ['id']
+
+
+class SheetUploadSerializer(serializers.Serializer):
+    file = serializers.FileField() 
+
+    def validate_file(self, value):
+        if not value.name.endswith('.csv'):
+            raise serializers.ValidationError("The file must be in CSV format.")
+        return value
+
+
+class TaskStatusSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UploadTask
+        fields = ['id', 'status', 'error_message', 'file_name', 'started_at', 'finished_at']
+        read_only_fields = fields
