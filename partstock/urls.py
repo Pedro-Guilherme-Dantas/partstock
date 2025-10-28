@@ -1,6 +1,13 @@
 from django.urls import path
 
-from .views import part_view, stock_movement_view, movement_item_view
+from .views.part_view import ListAndCreatePart, PartDetail
+from .views.movement_item_view import (
+    ListAndCreateMovementItem, MovementItemDetail
+)
+from .views.stock_movement_view import (
+    ListAndCreateStockMovement, StockMovementDetail
+)
+from .views.sheet_upload_view import PartUpload, TaskDetail
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
@@ -19,32 +26,40 @@ urlpatterns = [
         ),
     path(
         'parts/',
-        part_view.ListAndCreatePart.as_view(),
+        ListAndCreatePart.as_view(),
         name='list_and_create_part'
         ),
     path(
         'parts/<int:pk>/',
-        part_view.PartDetail.as_view(),
+        PartDetail.as_view(),
         name='detail_part'
         ),
     path(
         'stock_movements/',
-        stock_movement_view.ListAndCreateStockMovement.as_view(),
+        ListAndCreateStockMovement.as_view(),
         name='list_and_create_stock_movement'
         ),
     path(
         'stock_movements/<int:pk>/',
-        stock_movement_view.StockMovementDetail.as_view(),
+        StockMovementDetail.as_view(),
         name='detail_stock_movement'
         ),
     path(
         'movement_items/',
-        movement_item_view.ListAndCreateMovementItem.as_view(),
+        ListAndCreateMovementItem.as_view(),
         name='list_and_create_movement_item'
         ),
     path(
         'movement_items/<int:pk>/',
-        movement_item_view.MovementItemDetail.as_view(),
+        MovementItemDetail.as_view(),
         name='detail_movement_items'
-        )
+        ),
+    path(
+        'parts/upload/',
+        PartUpload.as_view(), name='parts-upload'
+        ),
+    path(
+        'parts/upload/status/<int:pk>/',
+        TaskDetail.as_view(), name='task-status'
+        ),
 ]

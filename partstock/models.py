@@ -106,3 +106,27 @@ class MovementItem(models.Model):
             - self.unit_cost_at_transaction
             )
         return  unit_profit * self.quantity
+
+
+class UploadTask(models.Model):
+    STATUS_CHOICES = [
+        ('PENDING', 'Pending'),
+        ('PROCESSING', 'Processing'),
+        ('COMPLETED', 'Completed'),
+        ('FAILED', 'Failed'),
+    ]
+
+    file_name = models.CharField(max_length=255)
+    started_at = models.DateTimeField(auto_now_add=True)
+    finished_at = models.DateTimeField(null=True, blank=True)
+    status = models.CharField(
+        max_length=20, choices=STATUS_CHOICES, default='PENDING'
+        )
+
+    uploaded_file = models.FileField(upload_to='temp_uploads/%Y/%m/%d/')
+
+    celery_task_id = models.CharField(max_length=255, null=True, blank=True)
+    error_message = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f'Import Task: {self.file_name} - {self.status}'
