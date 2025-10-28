@@ -7,7 +7,7 @@ class Part(models.Model):
     description = models.TextField()
     cost = models.DecimalField(max_digits=10, decimal_places=2)
     current_price = models.DecimalField(max_digits=10, decimal_places=2)
-    current_stock = models.IntegerField( 
+    current_stock = models.IntegerField(
         default=0
     )
     is_active = models.BooleanField(default=True)
@@ -69,18 +69,18 @@ class MovementItem(models.Model):
         related_name='items'
     )
     part = models.ForeignKey(
-        'Part', 
-        on_delete=models.PROTECT, 
+        'Part',
+        on_delete=models.PROTECT,
         related_name='movement_items'
     )
     quantity = models.IntegerField()
     unit_price_at_transaction = models.DecimalField(
-        max_digits=10, 
+        max_digits=10,
         decimal_places=2,
         blank=True
     )
     unit_cost_at_transaction = models.DecimalField(
-        max_digits=10, 
+        max_digits=10,
         decimal_places=2,
         blank=True
     )
@@ -105,7 +105,7 @@ class MovementItem(models.Model):
             self.unit_price_at_transaction
             - self.unit_cost_at_transaction
             )
-        return  unit_profit * self.quantity
+        return unit_profit * self.quantity
 
 
 class UploadTask(models.Model):
