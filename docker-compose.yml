@@ -27,9 +27,10 @@ services:
     env_file:
       - .env
     command: >
-      sh -c "sleep 10 && python manage.py makemigrations && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
+      sh -c "sleep 10 && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
+      - ./media:/app/media
     ports:
       - "8000:8000"
     depends_on:
@@ -44,6 +45,7 @@ services:
     command: celery -A config.celery worker -l info
     volumes:
       - .:/app
+      - ./media:/app/media
     env_file:
       - .env
     depends_on:
