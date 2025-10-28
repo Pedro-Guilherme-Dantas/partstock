@@ -35,6 +35,8 @@ class ListAndCreatePart(APIView):
 
 
 class PartDetail(APIView):
+    permission_classes = [IsAuthenticated, IsAdminUserOrReadOnly]
+
     def get(self, request, pk, format=None):
         part = PartService.get_by_id(pk)
         serializer = PartSerializer(part)

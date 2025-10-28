@@ -11,3 +11,6 @@ flower
 flake8
 mypy
 python-decouple
+pytest
+pytest-django
+factory-boy

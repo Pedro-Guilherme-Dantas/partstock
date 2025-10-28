@@ -1,6 +1,7 @@
 from partstock.models import Part, MovementItem
 from .stock_movement_service import StockMovementService
 from .movement_item_service import MovementItemService
+from rest_framework.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 from decimal import Decimal
@@ -54,7 +55,9 @@ class PartService:
     def delete_part(part_id: int) -> None:
         part = PartService.get_by_id(part_id)
         if MovementItem.objects.filter(part=part_id).count() > 0:
-            raise ValueError('Unable to delete the item. There is a movement history')
+            raise ValidationError(
+                'Unable to delete the item. There is a movement history'
+                )
         part.delete()
 
     @staticmethod
