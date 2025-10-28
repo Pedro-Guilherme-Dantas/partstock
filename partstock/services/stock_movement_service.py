@@ -1,6 +1,7 @@
 from partstock.models import MovementItem, StockMovement
 from django.db import transaction
 
+
 class StockMovementService:
     @staticmethod
     def get_all_movements():
@@ -20,10 +21,10 @@ class StockMovementService:
     def create_new_movement(validated_data: dict) -> StockMovement:
         if validated_data['movement_type'] not in dict(
             StockMovement.MOVEMENT_TYPES
-            ):
+        ):
             raise ValueError('Invalid Movement Type')
 
-        new_movement = StockMovement.objects.create(**validated_data) 
+        new_movement = StockMovement.objects.create(**validated_data)
         return new_movement
 
     @staticmethod

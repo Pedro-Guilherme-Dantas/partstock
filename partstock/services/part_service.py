@@ -8,6 +8,7 @@ from decimal import Decimal
 
 MIN_STOCK_LEVEL = 10
 
+
 class PartService:
     @staticmethod
     def get_all_parts():
@@ -27,9 +28,11 @@ class PartService:
         current_price = validated_data.get('current_price', Decimal('0.00'))
 
         if current_price < cost:
-            raise ValueError('The selling price cannot be less than the cost')
+            raise ValueError(
+                'The selling price cannot be less than the cost'
+                )
 
-        new_part = Part.objects.create(**validated_data) 
+        new_part = Part.objects.create(**validated_data)
         return new_part
 
     @staticmethod
@@ -43,9 +46,13 @@ class PartService:
                     'Cannot deactivate a Part that still has stock (stock > 0)'
                     )
         part.name = validated_data.get('name', part.name)
-        part.description = validated_data.get('description', part.description)
+        part.description = validated_data.get(
+            'description', part.description
+            )
         part.cost = validated_data.get('cost', part.cost)
-        part.current_price = validated_data.get('current_price', part.current_price)
+        part.current_price = validated_data.get(
+            'current_price', part.current_price
+            )
         part.is_active = validated_data.get('is_active', part.is_active)
         part.save()
         return part
