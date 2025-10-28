@@ -1,6 +1,7 @@
 from partstock.models import MovementItem, Part, StockMovement
 from django.db import transaction
 
+
 class MovementItemService:
     @staticmethod
     def get_all_movements():
@@ -25,9 +26,13 @@ class MovementItemService:
 
             if quantity == 0:
                 raise ValueError('zero value in quantity is not valid')
-            if stock_movement.movement_type == 'OUT' and quantity > part.current_stock:
+            if (
+                stock_movement.movement_type ==
+                'OUT' and quantity > part.current_stock
+            ):
                 raise ValueError(
-                    'The value of output items cannot be greater than the stock'
+                    'The value of output items cannot'
+                    'be greater than the stock'
                     )
         except Part.DoesNotExist as e:
             raise e
@@ -40,7 +45,7 @@ class MovementItemService:
         if not unit_price:
             validated_data['unit_price_at_transaction'] = part.current_price
         if not unit_cost:
-            validated_data['unit_cost_at_transaction']  = part.cost
+            validated_data['unit_cost_at_transaction'] = part.cost
 
         new_movement_item = MovementItem.objects.create(**validated_data)
 

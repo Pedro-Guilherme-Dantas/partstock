@@ -70,16 +70,25 @@ class MovementItemSerializer(serializers.ModelSerializer):
 
 
 class SheetUploadSerializer(serializers.Serializer):
-    file = serializers.FileField() 
+    file = serializers.FileField()
 
     def validate_file(self, value):
         if not value.name.endswith('.csv'):
-            raise serializers.ValidationError("The file must be in CSV format.")
+            raise serializers.ValidationError(
+                "The file must be in CSV format."
+                )
         return value
 
 
 class TaskStatusSerializer(serializers.ModelSerializer):
     class Meta:
         model = UploadTask
-        fields = ['id', 'status', 'error_message', 'file_name', 'started_at', 'finished_at']
+        fields = [
+            'id',
+            'status',
+            'error_message',
+            'file_name',
+            'started_at',
+            'finished_at'
+            ]
         read_only_fields = fields

@@ -54,6 +54,7 @@ class MovementItemFactory(DjangoModelFactory):
         )
     unit_cost_at_transaction = LazyAttribute(lambda obj: obj.part.cost)
 
+
 def get_auth_client(user):
     client = APIClient()
     refresh = RefreshToken.for_user(user)
@@ -61,45 +62,56 @@ def get_auth_client(user):
     client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
     return client
 
+
 @pytest.fixture
 def user_factory():
     return UserFactory
+
 
 @pytest.fixture
 def part_factory():
     return PartFactory
 
+
 @pytest.fixture
 def stock_movement_factory():
     return StockMovementFactory
+
 
 @pytest.fixture
 def movement_item_factory():
     return MovementItemFactory
 
+
 @pytest.fixture
 def active_part(part_factory):
     return part_factory()
+
 
 @pytest.fixture
 def test_user(user_factory):
     return user_factory(is_staff=False, is_superuser=False)
 
+
 @pytest.fixture
 def admin_user(user_factory):
     return user_factory(is_staff=True, is_superuser=True)
+
 
 @pytest.fixture
 def auth_client(test_user):
     return get_auth_client(test_user)
 
+
 @pytest.fixture
 def admin_client(admin_user):
     return get_auth_client(admin_user)
 
+
 @pytest.fixture
 def default_client():
     return APIClient()
+
 
 @pytest.fixture
 def api_client():

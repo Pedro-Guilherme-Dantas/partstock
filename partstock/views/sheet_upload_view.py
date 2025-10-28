@@ -6,6 +6,7 @@ from partstock.serializers import SheetUploadSerializer, TaskStatusSerializer
 from partstock.tasks import import_parts_task
 from partstock.models import UploadTask
 
+
 class PartUpload(APIView):
     def post(self, request, *args, **kwargs):
         serializer = SheetUploadSerializer(data=request.data)
@@ -23,7 +24,10 @@ class PartUpload(APIView):
         upload_task.save()
 
         return Response(
-            {'message': 'Import started successfully.', 'task_id': upload_task.id},
+            {
+                'message': 'Import started successfully.',
+                'task_id': upload_task.id
+            },
             status=status.HTTP_202_ACCEPTED
         )
 
