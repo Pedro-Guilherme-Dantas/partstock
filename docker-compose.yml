@@ -20,16 +20,15 @@ services:
     image: redis:7-alpine
     container_name: desafio-autopecas-redis
 
-
   web:
-    build: .
+    build: ./backend
     container_name: desafio-autopecas-web
     env_file:
       - .env
     command: >
       sh -c "sleep 10 && python manage.py migrate --noinput && python manage.py runserver 0.0.0.0:8000"
     volumes:
-      - .:/app
+      - ./backend:/app
       - ./media:/app/media
     ports:
       - "8000:8000"
@@ -39,12 +38,26 @@ services:
       redis:
         condition: service_started
 
+  frontend:
+    build: ./frontend
+    container_name: desafio-autopecas-frontend
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0"
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      - web
+
   celery:
-    build: .
+    build: ./backend
     container_name: desafio-autopecas-celery
     command: celery -A config.celery worker -l info
     volumes:
-      - .:/app
+      - ./backend:/app
       - ./media:/app/media
     env_file:
       - .env
@@ -57,14 +70,14 @@ services:
         condition: service_started
 
   celery-beat:
-    build: .
+    build: ./beckend
     container_name: desafio-autopecas-celery-beat
     env_file:
       - .env
     command: >
       sh -c "sleep 30 && celery -A config.celery beat -l info --scheduler django_celery_beat.schedulers.DatabaseScheduler"
     volumes:
-      - .:/app
+      - ./backend:/app
     depends_on:
       db:
         condition: service_healthy
@@ -74,13 +87,13 @@ services:
         condition: service_started
 
   flower:
-    build: .
+    build: ./backend
     container_name: desafio-autopecas-flower
     command: celery -A config.celery flower --address=0.0.0.0 --port=5555
     ports:
       - "5555:5555"
     volumes:
-      - .:/app
+      - ./backend:/app
     env_file:
       - .env
     depends_on:
@@ -90,14 +103,14 @@ services:
         condition: service_started
 
   test:
-      build: .
+      build: ./backend
       container_name: desafio-autopecas-test
       env_file:
         - .env
       environment:
         - DJANGO_SETTINGS_MODULE=config.settings
       volumes:
-        - .:/app
+        - ./backend:/app
       depends_on:
         db:
           condition: service_healthy

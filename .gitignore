@@ -1,6 +1,15 @@
-# .gitignore
+# Environment variables
 .env
-*.pyc
-__pycache__/
-venv/
-.venv/
+.env.local
+
+# IDEs
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+docker-compose.override.yml
