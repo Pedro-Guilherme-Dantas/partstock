@@ -31,15 +31,21 @@ jobs:
 
       - name: Create Dummy .env
         run: |
-          echo "POSTGRES_DB=partstock_db" > .env
-          echo "POSTGRES_USER=postgres" >> .env
-          echo "POSTGRES_PASSWORD=postgres" >> .env
-          echo "DATABASE_URL=postgres://postgres:postgres@db:5432/partstock_db" >> .env
-          echo "REDIS_URL=redis://redis:6379/0" >> .env
-          echo "CELERY_BROKER_URL=redis://redis:6379/0" >> .env
-          echo "DJANGO_SETTINGS_MODULE=config.settings" >> .env
-          echo "SECRET_KEY=django-insecure-test-key-para-ci-cd-123" >> .env
-          echo "DEBUG=True" >> .env
+          cat <<EOF > .env
+          SECRET_KEY=insecure-dev-key-fallback-nao-use-em-prod-7890!
+          DJANGO_DEBUG=True
+          DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+          POSTGRES_DB=pecas_db
+          POSTGRES_USER=admin_user
+          POSTGRES_PASSWORD=secure_db_password
+          DB_HOST=db
+          DB_PORT=5432
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          CELERY_BROKER_URL=redis://redis:6379/0
+          CELERY_RESULT_BACKEND=redis://redis:6379/0
+          DJANGO_SETTINGS_MODULE=config.settings
+          EOF
 
       - name: Build and Run Tests
         run: |
