@@ -36,6 +36,7 @@ jobs:
           echo "POSTGRES_PASSWORD=postgres" >> .env
           echo "DATABASE_URL=postgres://postgres:postgres@db:5432/partstock_db" >> .env
           echo "REDIS_URL=redis://redis:6379/0" >> .env
+          echo "CELERY_BROKER_URL=redis://redis:6379/0" >> .env
           echo "DJANGO_SETTINGS_MODULE=config.settings" >> .env
           echo "SECRET_KEY=django-insecure-test-key-para-ci-cd-123" >> .env
           echo "DEBUG=True" >> .env
