@@ -19,7 +19,7 @@ jobs:
         run: pip install flake8
 
       - name: Run Lint
-        run: flake8 backend/
+        run: flake8 --config=backend/.flake8 backend/
 
   test:
     name: Backend Tests
