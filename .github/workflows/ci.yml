@@ -1,0 +1,44 @@
+name: Partstock CI
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  lint:
+    name: Code Quality (Linter)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install Flake8
+        run: pip install flake8
+      - name: Run Lint
+        run: flake8 backend/
+
+  test:
+    name: Backend Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create Dummy .env
+        run: |
+          echo "DEBUG=True" > .env
+          echo "DJANGO_SETTINGS_MODULE=config.settings" >> .env
+          echo "DATABASE_URL=postgres://user:pass@db:5432/db" >> .env
+
+      - name: Build and Run Tests
+        run: |
+          docker compose run --rm test pytest partstock/tests/
+
+      - name: Shutdown Environment
+        if: always()
+        run: docker compose down
