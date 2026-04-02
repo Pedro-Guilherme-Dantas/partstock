@@ -1,0 +1,58 @@
+name: Continuous Integration
+
+on: [push, pull_request]
+
+jobs:
+  lint:
+    name: Code Quality (Linter)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Flake8
+        run: pip install flake8
+
+      - name: Run Lint
+        run: flake8 --config=backend/.flake8 backend/
+
+  test:
+    name: Backend Tests
+    needs: lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Create Dummy .env
+        run: |
+          cat <<EOF > .env
+          SECRET_KEY=insecure-dev-key-fallback-nao-use-em-prod-7890!
+          DJANGO_DEBUG=True
+          DJANGO_ALLOWED_HOSTS=localhost,127.0.0.1,0.0.0.0
+          POSTGRES_DB=pecas_db
+          POSTGRES_USER=admin_user
+          POSTGRES_PASSWORD=secure_db_password
+          DB_HOST=db
+          DB_PORT=5432
+          REDIS_HOST=redis
+          REDIS_PORT=6379
+          CELERY_BROKER_URL=redis://redis:6379/0
+          CELERY_RESULT_BACKEND=redis://redis:6379/0
+          DJANGO_SETTINGS_MODULE=config.settings
+          EOF
+
+      - name: Build and Run Tests
+        run: |
+          docker compose up -d db redis
+          docker compose run --rm test pytest partstock/tests/
+
+      - name: Shutdown Environment
+        if: always()
+        run: |
+          docker compose down -v
